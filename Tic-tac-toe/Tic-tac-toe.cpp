@@ -1,26 +1,27 @@
 #include <iostream>
-#include "Tic-tac-toe.h"
-const int sizeMap = 3;
+const int SizeMap = 3;
 
-void FillMapDeffoltValue(int**& map)
+int** Map;
+
+void FillMapDeffoltValue()
 {
 	int count = 1;
-	for(size_t i = 0; i < sizeMap; i++)
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		for(size_t j = 0; j < sizeMap; j++)
+		for(size_t j = 0; j < SizeMap; j++)
 		{
-			map[i][j] = count++;
+			Map[i][j] = count++;
 		}
 	}
 }
 
-void ShowMap(int**& map, int value = -1)
+void ShowMap()
 {
-	for(size_t i = 0; i < sizeMap; i++)
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		for(size_t j = 0; j < sizeMap; j++)
+		for(size_t j = 0; j < SizeMap; j++)
 		{
-			switch(map[i][j])
+			switch(Map[i][j])
 			{
 				case 0:
 					std::cout << 'O';
@@ -37,36 +38,36 @@ void ShowMap(int**& map, int value = -1)
 	}
 }
 
-bool IsEmptyOn(int**& map, int i, int j)
+bool IsEmptyOn(int i, int j)
 {
-	return map[i][j] != 0 && map[i][j] != -1;
+	return Map[i][j] != 0 && Map[i][j] != -1;
 }
 
-bool IsEmptyCell(int value, int**& map)
+bool IsEmptyCell(int value)
 {
 	bool isEmpty = false;
 	switch(value)
 	{
 		case 1:
-			isEmpty = IsEmptyOn(map, 0, 0); break;
+			isEmpty = IsEmptyOn(0, 0); break;
 		case 2:
-			isEmpty = IsEmptyOn(map, 0, 1); break;
+			isEmpty = IsEmptyOn(0, 1); break;
 		case 3:
-			isEmpty = IsEmptyOn(map, 0, 2); break;
+			isEmpty = IsEmptyOn(0, 2); break;
 		case 4:
-			isEmpty = IsEmptyOn(map, 1, 0); break;
+			isEmpty = IsEmptyOn(1, 0); break;
 		case 5:
-			isEmpty = IsEmptyOn(map, 1, 1); break;
+			isEmpty = IsEmptyOn(1, 1); break;
 		case 6:
-			isEmpty = IsEmptyOn(map, 1, 2); break;
+			isEmpty = IsEmptyOn(1, 2); break;
 		case 7:
-			isEmpty = IsEmptyOn(map, 2, 0); break;
+			isEmpty = IsEmptyOn(2, 0); break;
 		case 8:
-			isEmpty = IsEmptyOn(map, 2, 1); break;
+			isEmpty = IsEmptyOn(2, 1); break;
 		case 9:
-			isEmpty = IsEmptyOn(map, 2, 2); break;
+			isEmpty = IsEmptyOn(2, 2); break;
 		default:
-			std::cout << "Вводить можно только цифры 1-9. А Вы ввели " << value << '\n';
+			std::cout << "Выбранная Вами ячейка уже занята\n";
 			break;
 	}
 	return isEmpty;
@@ -79,100 +80,113 @@ int GetUserInput()
 	while(isEmptyCell == false)
 	{
 		std::cout << "Введите координату 1-9: ";
-		try
-		{
-			std::cin >> value;
-		}
-		catch(...)
-		{
-			std::cout << "Вводить можно только цифры!!!\n";
-			continue;
-		}
+		std::cin >> value;
+
 
 		if(value >= 1 && value <= 9)
 		{
-			return value;
+			isEmptyCell = true;
 		}
 		else
 		{
 			std::cout << "Вводить можно только цифры 1-9. А Вы ввели " << value << '\n';
+			value = 0;
 		}
 
 	}
+
 	return value;
 }
 
-void SetValueOnMap(int position, int value, int**& map)
+void SetValueOnMap(int position, int value)
 {
 	switch(position)
 	{
 		case 1:
-			map[0][0] = value; break;
+			Map[0][0] = value; break;
 		case 2:
-			map[0][1] = value; break;
+			Map[0][1] = value; break;
 		case 3:
-			map[0][2] = value; break;
+			Map[0][2] = value; break;
 		case 4:
-			map[1][0] = value; break;
+			Map[1][0] = value; break;
 		case 5:
-			map[1][1] = value; break;
+			Map[1][1] = value; break;
 		case 6:
-			map[1][2] = value; break;
+			Map[1][2] = value; break;
 		case 7:
-			map[2][0] = value; break;
+			Map[2][0] = value; break;
 		case 8:
-			map[2][1] = value; break;
+			Map[2][1] = value; break;
 		case 9:
-			map[2][2] = value; break;
+			Map[2][2] = value; break;
 		default:
 			std::cout << "Вводить можно только цифры 1-9. А Вы ввели " << value << '\n';
 			break;
 	}
 }
 
-bool CheckWin(int**& map)
+bool CheckWin()
 {
-	for(size_t i = 0; i < sizeMap; i++)
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		if(map[0][i] == map[1][i] && map[0][i] == map[2][i] && map[1][i] == map[2][i])
+		if(Map[0][i] == Map[1][i] && Map[0][i] == Map[2][i] && Map[1][i] == Map[2][i])
 		{
 			return true;
 		}
 
-		if(map[i][0] == map[i][1] && map[i][0] == map[i][2] && map[i][1] == map[i][2])
+		if(Map[i][0] == Map[i][1] && Map[i][0] == Map[i][2] && Map[i][1] == Map[i][2])
 		{
 			return true;
 		}
 	}
-	if(map[0][0] == map[1][1] && map[0][0] == map[2][2] && map[1][1] == map[2][2])
+	if(Map[0][0] == Map[1][1] && Map[0][0] == Map[2][2] && Map[1][1] == Map[2][2])
 	{
 		return true;
 	}
 
-	return map[0][2] == map[1][1] && map[0][2] == map[2][0] && map[1][1] == map[2][0];
+	if(Map[0][2] == Map[1][1] && Map[0][2] == Map[2][0] && Map[1][1] == Map[2][0])
+	{
+		return true;
+	}
+
+	int countPosition = 0;
+	for(size_t i = 0; i < SizeMap; i++)
+	{
+		for(size_t j = 0; j < SizeMap; j++)
+		{
+			countPosition++;
+			if(Map[i][j] == countPosition)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
-int GetUserPosition(int**& map)
+int GetUserPosition()
 {
 	bool isCorrect = false;
 	int position;
 	while(isCorrect == false)
 	{
 		position = GetUserInput();
-		isCorrect = IsEmptyCell(position, map);
+		isCorrect = IsEmptyCell(position);
 	}
 	return position;
 }
 
-int GetPositionForWin(int**& map, int value)
+int GetPositionForWin(int value)
 {
 	int countEqual = 0;
 	int indexJ;
-	for(size_t i = 0; i < sizeMap; i++)
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		for(size_t j = 0; j < sizeMap; j++)
+		for(size_t j = 0; j < SizeMap; j++)
 		{
-			if(map[i][j] != value)
+			if(Map[i][j] != value)
 			{
 				indexJ = j;
 			}
@@ -181,18 +195,18 @@ int GetPositionForWin(int**& map, int value)
 				countEqual++;
 			}
 		}
-		if(countEqual == 2 && map[i][indexJ] != 0 && map[i][indexJ] != -1)
+		if(countEqual == 2 && Map[i][indexJ] != 0 && Map[i][indexJ] != -1)
 		{
-			return map[i][indexJ];
+			return Map[i][indexJ];
 		}
 		countEqual = 0;
 	}
 
-	for(size_t i = 0; i < sizeMap; i++)
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		for(size_t j = 0; j < sizeMap; j++)
+		for(size_t j = 0; j < SizeMap; j++)
 		{
-			if(map[j][i] != value)
+			if(Map[j][i] != value)
 			{
 				indexJ = j;
 			}
@@ -201,34 +215,34 @@ int GetPositionForWin(int**& map, int value)
 				countEqual++;
 			}
 		}
-		if(countEqual == 2 && map[indexJ][i] != 0 && map[indexJ][i] != -1)
+		if(countEqual == 2 && Map[indexJ][i] != 0 && Map[indexJ][i] != -1)
 		{
-			return map[indexJ][i];
+			return Map[indexJ][i];
 		}
 		countEqual = 0;
 	}
 
-	if(map[2][0] == map[1][1] && map[0][2] == 3)
+	if(Map[2][0] == Map[1][1] && Map[0][2] == 3)
 	{
 		return 3;
 	}
-	else if(map[2][0] == map[0][2] && map[1][1] == 5)
+	else if(Map[2][0] == Map[0][2] && Map[1][1] == 5)
 	{
 		return 5;
 	}
-	else if(map[1][1] == map[0][2] && map[2][0] == 7)
+	else if(Map[1][1] == Map[0][2] && Map[2][0] == 7)
 	{
 		return 7;
 	}
-	else if(map[0][0] == map[1][1] && map[2][2] == 9)
+	else if(Map[0][0] == Map[1][1] && Map[2][2] == 9)
 	{
 		return 9;
 	}
-	else if(map[1][1] == map[2][2] && map[0][0] == 1)
+	else if(Map[1][1] == Map[2][2] && Map[0][0] == 1)
 	{
 		return 1;
 	}
-	else if(map[0][0] == map[2][2] && map[1][1] == 5)
+	else if(Map[0][0] == Map[2][2] && Map[1][1] == 5)
 	{
 		return 5;
 	}
@@ -236,21 +250,21 @@ int GetPositionForWin(int**& map, int value)
 	return -2;
 }
 
-int FindBestCorner(int**& map)
+int FindBestCorner()
 {
-	if(map[0][0] == 1 && map[0][1] == 2 && map[1][0] == 4)
+	if(Map[0][0] == 1 && Map[0][1] == 2 && Map[1][0] == 4)
 	{
 		return 1;
 	}
-	else if(map[0][2] == 3 && map[0][1] == 2 && map[1][2] == 6)
+	else if(Map[0][2] == 3 && Map[0][1] == 2 && Map[1][2] == 6)
 	{
 		return 3;
 	}
-	else if(map[2][0] == 7 && map[1][0] == 4 && map[2][1] == 8)
+	else if(Map[2][0] == 7 && Map[1][0] == 4 && Map[2][1] == 8)
 	{
 		return 7;
 	}
-	else if(map[2][2] == 9 && map[1][2] == 6 && map[2][1] == 8)
+	else if(Map[2][2] == 9 && Map[1][2] == 6 && Map[2][1] == 8)
 	{
 		return 9;
 	}
@@ -260,15 +274,15 @@ int FindBestCorner(int**& map)
 	}
 }
 
-int FindEmptyCell(int**& map)
+int FindEmptyCell()
 {
 	int countPosition = 0;
-	for(size_t i = 0; i < sizeMap; i++)
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		for(size_t j = 0; j < sizeMap; j++)
+		for(size_t j = 0; j < SizeMap; j++)
 		{
 			countPosition++;
-			if(map[i][j] != 0 && map[i][j] != -1)
+			if(Map[i][j] != 0 && Map[i][j] != -1)
 			{
 				return countPosition;
 			}
@@ -278,43 +292,35 @@ int FindEmptyCell(int**& map)
 	return -2;
 }
 
-void CheckAndSetValueOnMap(int**& map, int position, int symbol = -1)
-{
-	if(position != -2)
-	{
-		SetValueOnMap(position, symbol, map);
-	}
-}
-
-void AITurn(int**& map, int  positionCorners[4])
+void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 {
 	int position;
 
-	position = GetPositionForWin(map, -1);
+	position = GetPositionForWin(symbolAI);
 	if(position != -2)
 	{
-		SetValueOnMap(position, -1, map);
+		SetValueOnMap(position, symbolAI);
 		return;
 	}
 
-	position = GetPositionForWin(map, 0);
+	position = GetPositionForWin(symbolUser);
 	if(position != -2)
 	{
-		SetValueOnMap(position, -1, map);
+		SetValueOnMap(position, symbolAI);
 		return;
 	}
 
-	position = FindBestCorner(map);
+	position = FindBestCorner();
 	if(position != -2)
 	{
-		SetValueOnMap(position, -1, map);
+		SetValueOnMap(position, symbolAI);
 		return;
 	}
 
-	position = FindEmptyCell(map);
+	position = FindEmptyCell();
 	if(position != -2)
 	{
-		SetValueOnMap(position, -1, map);
+		SetValueOnMap(position, symbolAI);
 		return;
 	}
 
@@ -322,31 +328,46 @@ void AITurn(int**& map, int  positionCorners[4])
 	while(isCorrect == false)
 	{
 		position = rand() % 3;
-		isCorrect = IsEmptyCell(positionCorners[position], map);
-		SetValueOnMap(positionCorners[position], -1, map);
+		isCorrect = IsEmptyCell(positionCorners[position]);
+		SetValueOnMap(positionCorners[position], symbolAI);
 	}
 }
 
-void StartGameAIFirst()
+void MamoryAlocationForMap()
 {
-	srand(time(0));
-	int positionCorners[] = {1,3,7,9};
-	int** map = new int* [sizeMap];
-	for(size_t i = 0; i < sizeMap; i++)
+	Map = new int* [SizeMap];
+	for(size_t i = 0; i < SizeMap; i++)
 	{
-		map[i] = new int[sizeMap];
+		Map[i] = new int[SizeMap];
 	}
-	FillMapDeffoltValue(map);
+}
 
-	map[1][1] = -1; // робот ставит крестик в центр
-	ShowMap(map);
+void DeleteMap()
+{
+	for(size_t i = 0; i < SizeMap; i++)
+	{
+		delete[] Map[i];
+	}
+	delete[] Map;
+}
+
+void StartGameAIFirst(int positionCorners[4])
+{
+	int symbolUser = 0;
+	int symbolAI = -1;
+
+	MamoryAlocationForMap();
+	FillMapDeffoltValue();
+
+	Map[1][1] = -1; // робот ставит крестик в центр
+	ShowMap();
 
 	int position;
-	position = GetUserPosition(map); // Ввод пользователя
-	SetValueOnMap(position, 0, map);
+	position = GetUserPosition(); // Ввод пользователя
+	SetValueOnMap(position, symbolUser);
 
 	bool isCorrect = false;
-	ShowMap(map);
+	ShowMap();
 	if(position == 2 || position == 4 || position == 6 || position == 8)
 	{
 		// робот ставит в любой угол крестик
@@ -354,43 +375,43 @@ void StartGameAIFirst()
 		while(isCorrect == false)
 		{
 			position = rand() % 3;
-			isCorrect = IsEmptyCell(positionCorners[position], map);
-			SetValueOnMap(positionCorners[position], -1, map);
+			isCorrect = IsEmptyCell(positionCorners[position]);
+			SetValueOnMap(positionCorners[position], symbolAI);
 		}
-		ShowMap(map);
+		ShowMap();
 
 		// Ввод пользователя
-		position = GetUserPosition(map);
-		SetValueOnMap(position, 0, map);
-		ShowMap(map);
+		position = GetUserPosition();
+		SetValueOnMap(position, symbolUser);
+		ShowMap();
 
 		// Робот ставит либо последний ход, либо предпоследний ход перед победой
-		position = GetPositionForWin(map, -1);
+		position = GetPositionForWin(symbolAI);
 		if(position != -2)
 		{
-			SetValueOnMap(position, -1, map);
+			SetValueOnMap(position, symbolAI);
 		}
 		else
 		{
-			position = FindBestCorner(map);
-			SetValueOnMap(position, -1, map); // 
+			position = FindBestCorner();
+			SetValueOnMap(position, symbolAI); // 
 		}
-		ShowMap(map);
-		if(CheckWin(map))
+		ShowMap();
+		if(CheckWin())
 		{
 			return;
 		}
 
 		// Ввод пользователя
-		position = GetUserPosition(map);
-		SetValueOnMap(position, 0, map);
-		ShowMap(map);
+		position = GetUserPosition();
+		SetValueOnMap(position, symbolUser);
+		ShowMap();
 
 		// Последний ход робота
-		SetValueOnMap(GetPositionForWin(map, -1), -1, map);
-		ShowMap(map);
+		SetValueOnMap(GetPositionForWin(symbolAI), symbolAI);
+		ShowMap();
 
-		if(CheckWin(map))
+		if(CheckWin())
 		{
 			return;
 		}
@@ -398,32 +419,88 @@ void StartGameAIFirst()
 	else
 	{
 		bool isUser = false;
-		while(CheckWin(map) == false)
+		while(CheckWin() == false)
 		{
 			if(isUser == false)
 			{
-				AITurn(map, positionCorners);
+				AITurn(positionCorners, symbolUser, symbolAI);
 				isUser = true;
 			}
 			else
 			{
-				position = GetUserPosition(map); // Ввод пользователя
-				SetValueOnMap(position, 0, map);
+				position = GetUserPosition(); // Ввод пользователя
+				SetValueOnMap(position, symbolUser);
 				isUser = false;
 			}
-			ShowMap(map);
+			ShowMap();
 		}
 	}
 
-	for(size_t i = 0; i < sizeMap; i++)
+	DeleteMap();
+}
+
+void StartGameUserFirst(int positionCorners[4])
+{
+	int symbolUser = -1;
+	int symbolAI = 0;
+
+	MamoryAlocationForMap();
+	FillMapDeffoltValue();
+	// Ввод пользователя
+	int position;
+	position = GetUserPosition();
+	SetValueOnMap(position, symbolUser);
+	ShowMap();
+
+	bool isUser = false;
+	if(Map[1][1] != 5)
 	{
-		delete[] map[i];
+		while(CheckWin() == false)
+		{
+			if(isUser == false)
+			{
+				AITurn(positionCorners, symbolUser, symbolAI);
+				isUser = true;
+			}
+			else
+			{
+				// Ввод пользователя
+				position = GetUserPosition();
+				SetValueOnMap(position, symbolUser);
+				isUser = false;
+			}
+			ShowMap();
+		}
 	}
-	delete[] map;
+	else
+	{
+		Map[1][1] = symbolAI;
+		ShowMap();
+		while(CheckWin() == false)
+		{
+			if(isUser == false)
+			{
+				// Ввод пользователя
+				position = GetUserPosition();
+				SetValueOnMap(position, symbolUser);
+				isUser = true;
+			}
+			else
+			{
+				AITurn(positionCorners, symbolUser, symbolAI);
+				isUser = false;
+			}
+			ShowMap();
+		}
+	}
+
+	DeleteMap();
 }
 
 void ShowMenu()
 {
+	srand(time(0));
+	int positionCorners[] = {1,3,7,9};
 	bool isExit = false;
 	int numberOfCommand;
 	while(isExit == false)
@@ -439,13 +516,13 @@ void ShowMenu()
 			case 1:
 				std::system("cls");
 				std::cout << "Первым ходит пользователь.\n";
-
+				StartGameUserFirst(positionCorners);
 				break;
 
 			case 2:
 				std::system("cls");
 				std::cout << "Первым ходит компьютер.\n";
-				StartGameAIFirst();
+				StartGameAIFirst(positionCorners);
 				break;
 			case 3:
 				isExit = true;
