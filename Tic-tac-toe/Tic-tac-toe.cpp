@@ -29,6 +29,7 @@ void FillMapDeffoltValue()
 /// </summary>
 void ShowMap()
 {
+	std::cout << "-----\n";
 	for(size_t i = 0; i < SizeMap; i++)
 	{
 		for(size_t j = 0; j < SizeMap; j++)
@@ -45,9 +46,18 @@ void ShowMap()
 					std::cout << ' ';
 					break;
 			}
+			if(j < SizeMap - 1)
+			{
+				std::cout << "|";
+			}
+			
 		}
-		std::cout << "\n";
+		if(i < SizeMap - 1)
+		{
+			std::cout << "\n-----\n";
+		}	
 	}
+	std::cout << "\n-----\n\n";
 }
 
 /// <summary>
