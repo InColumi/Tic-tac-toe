@@ -1,8 +1,17 @@
 #include <iostream>
+/// <summary>
+/// Размер поля
+/// </summary>
 const int SizeMap = 3;
 
+/// <summary>
+/// Карта матрица 3х3
+/// </summary>
 int** Map;
 
+/// <summary>
+/// Заполняет матрица цифрами 1-9(как клавиатура телефона)
+/// </summary>
 void FillMapDeffoltValue()
 {
 	int count = 1;
@@ -15,6 +24,9 @@ void FillMapDeffoltValue()
 	}
 }
 
+/// <summary>
+/// Показывает карту на мониторе
+/// </summary>
 void ShowMap()
 {
 	for(size_t i = 0; i < SizeMap; i++)
@@ -23,13 +35,13 @@ void ShowMap()
 		{
 			switch(Map[i][j])
 			{
-				case 0:
+				case 0: // если значение на карте = 0, то выводит символ  О
 					std::cout << 'O';
 					break;
-				case -1:
+				case -1:// если значение на карте = -1, то выводит символ  Х
 					std::cout << 'X';
 					break;
-				default:
+				default:// в любом другом варианте выводит пробел
 					std::cout << ' ';
 					break;
 			}
@@ -38,11 +50,21 @@ void ShowMap()
 	}
 }
 
+/// <summary>
+/// Проверяет пусатя ли ячейка по координатам i j
+/// </summary>
+/// <param name="value"></param>
+/// <returns></returns>
 bool IsEmptyOn(int i, int j)
 {
 	return Map[i][j] != 0 && Map[i][j] != -1;
 }
 
+/// <summary>
+/// Проверяет пустая ячейка на позиция 1-9
+/// </summary>
+/// <param name="value"></param>
+/// <returns></returns>
 bool IsEmptyCell(int value)
 {
 	bool isEmpty = false;
@@ -73,24 +95,27 @@ bool IsEmptyCell(int value)
 	return isEmpty;
 }
 
+/// <summary>
+/// Ввод пользователя
+/// </summary>
+/// <returns>возвращет значение пользователя</returns>
 int GetUserInput()
 {
-	int value;
-	bool isEmptyCell = false;
+	int value; // значение, которое введет пользователь
+	bool isEmptyCell = false; // флаг проверки корректности
 	while(isEmptyCell == false)
 	{
 		std::cout << "Введите координату 1-9: ";
 		std::cin >> value;
 
 
-		if(value >= 1 && value <= 9)
+		if(value >= 1 && value <= 9) // если введеное попадает в диапазон 1-9
 		{
 			isEmptyCell = true;
 		}
-		else
+		else // иначе выводит сообщение
 		{
 			std::cout << "Вводить можно только цифры 1-9. А Вы ввели " << value << '\n';
-			value = 0;
 		}
 
 	}
@@ -98,6 +123,11 @@ int GetUserInput()
 	return value;
 }
 
+/// <summary>
+/// Ставит значение на указанную позицию
+/// </summary>
+/// <param name="position">позиция</param>
+/// <param name="value">значение</param>
 void SetValueOnMap(int position, int value)
 {
 	switch(position)
@@ -126,8 +156,13 @@ void SetValueOnMap(int position, int value)
 	}
 }
 
+/// <summary>
+/// Проверка победы
+/// </summary>
+/// <returns></returns>
 bool CheckWin()
 {
+	// Проверка победы по вертикалям и Горизонталям
 	for(size_t i = 0; i < SizeMap; i++)
 	{
 		if(Map[0][i] == Map[1][i] && Map[0][i] == Map[2][i] && Map[1][i] == Map[2][i])
@@ -140,16 +175,20 @@ bool CheckWin()
 			return true;
 		}
 	}
+
+	// Проверка победы по диагонали
 	if(Map[0][0] == Map[1][1] && Map[0][0] == Map[2][2] && Map[1][1] == Map[2][2])
 	{
 		return true;
 	}
 
+	// Проверка победы по диагонали
 	if(Map[0][2] == Map[1][1] && Map[0][2] == Map[2][0] && Map[1][1] == Map[2][0])
 	{
 		return true;
 	}
 
+	// Проверка ничьи, если все ячейки заняты, то вернет true
 	int countPosition = 0;
 	for(size_t i = 0; i < SizeMap; i++)
 	{
@@ -166,6 +205,11 @@ bool CheckWin()
 	return true;
 }
 
+/// <summary>
+/// Считывает введенную позицию пользователя и проверят на пустоту.
+/// </summary>
+/// <param name="value"></param>
+/// <returns></returns>
 int GetUserPosition()
 {
 	bool isCorrect = false;
@@ -178,50 +222,60 @@ int GetUserPosition()
 	return position;
 }
 
+/// <summary>
+/// Возвращает ячейку для победы
+/// </summary>
+/// <param name="value">значение, что сравнивать O или X </param>
+/// <returns></returns>
 int GetPositionForWin(int value)
 {
+	// Считает кол-во совпадений. Должно быть 2 для возвращение позиции
 	int countEqual = 0;
+
+	// индекс стобца для верной позиции
 	int indexJ;
 	for(size_t i = 0; i < SizeMap; i++)
 	{
 		for(size_t j = 0; j < SizeMap; j++)
 		{
-			if(Map[i][j] != value)
+			if(Map[i][j] != value) // если ячейка не равна значению
 			{
-				indexJ = j;
+				indexJ = j; // сохраняем позицию
 			}
 			else
 			{
-				countEqual++;
+				countEqual++; // иначе считаем совпадения
 			}
 		}
-		if(countEqual == 2 && Map[i][indexJ] != 0 && Map[i][indexJ] != -1)
+		if(countEqual == 2 && Map[i][indexJ] != 0 && Map[i][indexJ] != -1) // если ячейка не занята, то возвращем 
 		{
 			return Map[i][indexJ];
 		}
-		countEqual = 0;
+		countEqual = 0; // сбрасывем счетчик
 	}
 
 	for(size_t i = 0; i < SizeMap; i++)
 	{
 		for(size_t j = 0; j < SizeMap; j++)
 		{
-			if(Map[j][i] != value)
+			if(Map[j][i] != value)// если ячейка не равна значению
 			{
-				indexJ = j;
+				indexJ = j;// сохраняем позицию
 			}
 			else
 			{
-				countEqual++;
+				countEqual++;// иначе считаем совпадения
 			}
 		}
-		if(countEqual == 2 && Map[indexJ][i] != 0 && Map[indexJ][i] != -1)
+		if(countEqual == 2 && Map[indexJ][i] != 0 && Map[indexJ][i] != -1)// если ячейка не занята, то возвращем 
 		{
 			return Map[indexJ][i];
 		}
-		countEqual = 0;
+		countEqual = 0; // сбрасывем счетчик
 	}
 
+
+	// смотрим на диагонали... Если ли там свободные позиции для победы
 	if(Map[2][0] == Map[1][1] && Map[0][2] == 3)
 	{
 		return 3;
@@ -247,9 +301,16 @@ int GetPositionForWin(int value)
 		return 5;
 	}
 
+	// если ничего не нашлось, то возвращем -2
 	return -2;
 }
 
+/// <summary>
+/// Находим угол для победы 
+/// </summary>
+/// <param name="positionCorners"></param>
+/// <param name="symbolUser"></param>
+/// <param name="symbolAI"></param>
 int FindBestCorner()
 {
 	if(Map[0][0] == 1 && Map[0][1] == 2 && Map[1][0] == 4)
@@ -274,6 +335,7 @@ int FindBestCorner()
 	}
 }
 
+// Поиск пустой ячейки
 int FindEmptyCell()
 {
 	int countPosition = 0;
@@ -292,10 +354,15 @@ int FindEmptyCell()
 	return -2;
 }
 
+/// <summary>
+/// Возможные ходы ПК
+/// </summary>
+/// <param name="positionCorners"></param>
 void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 {
 	int position;
 
+	// Проверяем есть ли линия из двух позиций
 	position = GetPositionForWin(symbolAI);
 	if(position != -2)
 	{
@@ -303,6 +370,7 @@ void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 		return;
 	}
 
+	// Проверяем есть ли линия из двух позиций у противника
 	position = GetPositionForWin(symbolUser);
 	if(position != -2)
 	{
@@ -310,6 +378,7 @@ void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 		return;
 	}
 
+	// находим позицию угла для победы
 	position = FindBestCorner();
 	if(position != -2)
 	{
@@ -317,6 +386,7 @@ void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 		return;
 	}
 
+	// поиск пустой ячейки
 	position = FindEmptyCell();
 	if(position != -2)
 	{
@@ -324,6 +394,7 @@ void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 		return;
 	}
 
+	// если ничего не сработало, то выбираем случайны угол
 	bool isCorrect = false;
 	while(isCorrect == false)
 	{
@@ -333,6 +404,10 @@ void AITurn(int positionCorners[4], int symbolUser, int symbolAI)
 	}
 }
 
+/// <summary>
+/// Выделение памяти под карту
+/// </summary>
+/// <param name="positionCorners"></param>
 void MamoryAlocationForMap()
 {
 	Map = new int* [SizeMap];
@@ -342,6 +417,10 @@ void MamoryAlocationForMap()
 	}
 }
 
+/// <summary>
+/// Удалине памяти из под карты
+/// </summary>
+/// <param name="positionCorners"></param>
 void DeleteMap()
 {
 	for(size_t i = 0; i < SizeMap; i++)
@@ -351,6 +430,10 @@ void DeleteMap()
 	delete[] Map;
 }
 
+/// <summary>
+/// Метод когда ПК ходит первым
+/// </summary>
+/// <param name="positionCorners"></param>
 void StartGameAIFirst(int positionCorners[4])
 {
 	int symbolUser = 0;
@@ -362,13 +445,14 @@ void StartGameAIFirst(int positionCorners[4])
 	Map[1][1] = -1; // робот ставит крестик в центр
 	ShowMap();
 
+	// Ввод пользователя
 	int position;
-	position = GetUserPosition(); // Ввод пользователя
+	position = GetUserPosition(); 
 	SetValueOnMap(position, symbolUser);
 
 	bool isCorrect = false;
 	ShowMap();
-	if(position == 2 || position == 4 || position == 6 || position == 8)
+	if(position == 2 || position == 4 || position == 6 || position == 8) // Когда пользователь выбирает позицию для проигрыша
 	{
 		// робот ставит в любой угол крестик
 		bool isCorrect = false;
@@ -394,7 +478,7 @@ void StartGameAIFirst(int positionCorners[4])
 		else
 		{
 			position = FindBestCorner();
-			SetValueOnMap(position, symbolAI); // 
+			SetValueOnMap(position, symbolAI); 
 		}
 		ShowMap();
 		if(CheckWin())
@@ -423,12 +507,14 @@ void StartGameAIFirst(int positionCorners[4])
 		{
 			if(isUser == false)
 			{
+				// Ввод робота
 				AITurn(positionCorners, symbolUser, symbolAI);
 				isUser = true;
 			}
 			else
 			{
-				position = GetUserPosition(); // Ввод пользователя
+				// Ввод пользователя
+				position = GetUserPosition(); 
 				SetValueOnMap(position, symbolUser);
 				isUser = false;
 			}
@@ -439,6 +525,10 @@ void StartGameAIFirst(int positionCorners[4])
 	DeleteMap();
 }
 
+/// <summary>
+/// Метод когда пользователь ходим первым
+/// </summary>
+/// <param name="positionCorners"></param>
 void StartGameUserFirst(int positionCorners[4])
 {
 	int symbolUser = -1;
@@ -446,6 +536,7 @@ void StartGameUserFirst(int positionCorners[4])
 
 	MamoryAlocationForMap();
 	FillMapDeffoltValue();
+	
 	// Ввод пользователя
 	int position;
 	position = GetUserPosition();
@@ -453,12 +544,13 @@ void StartGameUserFirst(int positionCorners[4])
 	ShowMap();
 
 	bool isUser = false;
-	if(Map[1][1] != 5)
+	if(Map[1][1] != 5) // если центр занят
 	{
 		while(CheckWin() == false)
 		{
 			if(isUser == false)
 			{
+				// Ввод робота
 				AITurn(positionCorners, symbolUser, symbolAI);
 				isUser = true;
 			}
@@ -474,7 +566,7 @@ void StartGameUserFirst(int positionCorners[4])
 	}
 	else
 	{
-		Map[1][1] = symbolAI;
+		Map[1][1] = symbolAI; // робот ставит в центр
 		ShowMap();
 		while(CheckWin() == false)
 		{
@@ -487,6 +579,7 @@ void StartGameUserFirst(int positionCorners[4])
 			}
 			else
 			{
+				// Ввод робота
 				AITurn(positionCorners, symbolUser, symbolAI);
 				isUser = false;
 			}
@@ -497,10 +590,11 @@ void StartGameUserFirst(int positionCorners[4])
 	DeleteMap();
 }
 
+// Меню программы
 void ShowMenu()
 {
 	srand(time(0));
-	int positionCorners[] = {1,3,7,9};
+	int positionCorners[] = {1,3,7,9}; // позиции углов для случайного выбора
 	bool isExit = false;
 	int numberOfCommand;
 	while(isExit == false)
@@ -514,19 +608,16 @@ void ShowMenu()
 		switch(numberOfCommand)
 		{
 			case 1:
-				std::system("cls");
 				std::cout << "Первым ходит пользователь.\n";
 				StartGameUserFirst(positionCorners);
 				break;
 
 			case 2:
-				std::system("cls");
 				std::cout << "Первым ходит компьютер.\n";
 				StartGameAIFirst(positionCorners);
 				break;
 			case 3:
 				isExit = true;
-				std::system("cls");
 				std::cout << "Программа закончила свою работу.\n";
 				break;
 			default:
